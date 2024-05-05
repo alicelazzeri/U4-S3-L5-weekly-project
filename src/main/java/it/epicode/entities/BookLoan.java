@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 @Entity
@@ -100,5 +101,17 @@ public class BookLoan {
                 .add("Expected ending of the loan = " + getExpectedEndingOfLoan())
                 .add("Actual ending of the loan = " + getActualEndingOfLoan())
                 .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BookLoan bookLoan)) return false;
+        return getId() == bookLoan.getId() && Objects.equals(getUser(), bookLoan.getUser()) && Objects.equals(getLentElement(), bookLoan.getLentElement()) && Objects.equals(getBeginningOfLoan(), bookLoan.getBeginningOfLoan()) && Objects.equals(getExpectedEndingOfLoan(), bookLoan.getExpectedEndingOfLoan()) && Objects.equals(getActualEndingOfLoan(), bookLoan.getActualEndingOfLoan());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUser(), getLentElement(), getBeginningOfLoan(), getExpectedEndingOfLoan(), getActualEndingOfLoan());
     }
 }

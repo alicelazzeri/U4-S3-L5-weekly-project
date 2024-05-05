@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 @Entity
@@ -84,4 +85,16 @@ public abstract class LibraryItem extends BaseEntity {
                 .toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LibraryItem that)) return false;
+        if (!super.equals(o)) return false;
+        return getISBN() == that.getISBN() && getYearOfPublication() == that.getYearOfPublication() && getNumberOfPages() == that.getNumberOfPages() && Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getBookLoans(), that.getBookLoans());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getISBN(), getTitle(), getYearOfPublication(), getNumberOfPages(), getBookLoans());
+    }
 }

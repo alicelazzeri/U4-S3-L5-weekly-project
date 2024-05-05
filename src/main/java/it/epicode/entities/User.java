@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 @Entity
@@ -90,12 +91,24 @@ public class User {
     @Override
     public String toString() {
         return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
-                .add("ID = " + id)
-                .add("Name = '" + name + "'")
-                .add("Surname = '" + surname + "'")
-                .add("Date of birth = " + dateOfBirth)
-                .add("Card number = " + cardNumber)
-                .add("List of book loans = " + bookLoans)
+                .add("ID = " + getId())
+                .add("Name = '" + getName() + "'")
+                .add("Surname = '" + getSurname() + "'")
+                .add("Date of birth = " + getDateOfBirth())
+                .add("Card number = " + getCardNumber())
+                .add("List of book loans = " + getBookLoans())
                 .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return getId() == user.getId() && getCardNumber() == user.getCardNumber() && Objects.equals(getName(), user.getName()) && Objects.equals(getSurname(), user.getSurname()) && Objects.equals(getDateOfBirth(), user.getDateOfBirth()) && Objects.equals(getBookLoans(), user.getBookLoans());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getSurname(), getDateOfBirth(), getCardNumber(), getBookLoans());
     }
 }

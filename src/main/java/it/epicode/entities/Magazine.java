@@ -5,6 +5,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
+import java.util.Objects;
+import java.util.StringJoiner;
+
 @Entity
 @Table (name = Tables.Names.MAGAZINES)
 
@@ -28,4 +31,23 @@ public class Magazine extends LibraryItem {
         this.periodicity = periodicity;
     }
 
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Magazine.class.getSimpleName() + "[", "]")
+                .add("Periodicity = " + getPeriodicity())
+                .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Magazine magazine)) return false;
+        if (!super.equals(o)) return false;
+        return getPeriodicity() == magazine.getPeriodicity();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getPeriodicity());
+    }
 }
