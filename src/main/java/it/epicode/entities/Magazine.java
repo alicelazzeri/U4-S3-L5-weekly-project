@@ -33,7 +33,11 @@ public class Magazine extends LibraryItem {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Magazine.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", Magazine.class.getSimpleName() + " [", "]")
+                .add("ISBN=" + getISBN())
+                .add("Title = '" + getTitle() + "'")
+                .add("Year of publication = " + getYearOfPublication())
+                .add("Number of pages = " + getNumberOfPages())
                 .add("Periodicity = " + getPeriodicity())
                 .toString();
     }

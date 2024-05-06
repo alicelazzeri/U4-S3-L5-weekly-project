@@ -1,5 +1,6 @@
 package it.epicode.entities;
 
+import it.epicode.entities.constants.Queries;
 import it.epicode.entities.constants.Tables;
 import jakarta.persistence.*;
 

@@ -1,5 +1,6 @@
 package it.epicode.entities;
 
+import it.epicode.entities.constants.Queries;
 import it.epicode.entities.constants.Tables;
 import jakarta.persistence.*;
 
@@ -10,6 +11,9 @@ import java.util.StringJoiner;
 
 @Entity
 @Table(name = Tables.Names.BOOK_LOANS)
+
+@NamedQuery(name = Queries.BookLoans.RESEARCH_BY_EXPIRED_AND_UNRETURNED_LOANS, query = "SELECT bl FROM BookLoan AS bl WHERE bl.actualEndingOfLoan IS NULL AND :currentDate > bl.expectedEndingOfLoan")
+@NamedQuery(name = Queries.BookLoans.RESEARCH_LENT_ITEMS_BY_CARD_NUMBER, query = "SELECT bl.lentElement FROM BookLoan AS bl WHERE bl.user.cardNumber = :cardNumber AND bl.actualEndingOfLoan IS NULL")
 
 public class BookLoan {
     @Id
@@ -24,11 +28,11 @@ public class BookLoan {
     @JoinColumn(name = "library_item_id")
     private LibraryItem lentElement;
 
-    @Column  (nullable = false)
+    @Column
     private LocalDate beginningOfLoan;
-    @Column (nullable = false)
+    @Column
     private LocalDate expectedEndingOfLoan;
-    @Column  (nullable = false)
+    @Column
     private LocalDate actualEndingOfLoan;
 
     public BookLoan(long id, User user, LibraryItem lentElement, LocalDate beginningOfLoan, int daysToAdd, Date expectedEndingOfLoan, LocalDate actualEndingOfLoan) {

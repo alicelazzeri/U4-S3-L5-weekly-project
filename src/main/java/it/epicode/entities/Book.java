@@ -1,8 +1,10 @@
 package it.epicode.entities;
 
+import it.epicode.entities.constants.Queries;
 import it.epicode.entities.constants.Tables;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 import java.util.Objects;
@@ -10,6 +12,9 @@ import java.util.StringJoiner;
 
 @Entity
 @Table (name = Tables.Names.BOOKS)
+
+@NamedQuery(name = Queries.Books.RESEARCH_BY_AUTHOR, query = "SELECT b FROM Book AS b WHERE b.author LIKE :author")
+
 public class Book extends LibraryItem {
     @Column (length = 30, nullable = false)
     private String author;
@@ -43,9 +48,13 @@ public class Book extends LibraryItem {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Book.class.getSimpleName() + "[", "]")
-                .add("author='" + author + "'")
-                .add("genre='" + genre + "'")
+        return new StringJoiner(", ", Book.class.getSimpleName() + " [", "]")
+                .add("ISBN = '" + getISBN() + "'")
+                .add("Title = '" + getTitle() + "'")
+                .add("Author = '" + getAuthor() + "'")
+                .add("Genre = '" + getGenre() + "'")
+                .add("Year of publication = '" + getYearOfPublication() + "'")
+                .add("Number of pages = '" + getNumberOfPages() + "'")
                 .toString();
     }
 

@@ -1,5 +1,6 @@
 package it.epicode.entities;
 
+import it.epicode.entities.constants.Queries;
 import it.epicode.entities.constants.Tables;
 import jakarta.persistence.*;
 
@@ -11,6 +12,11 @@ import java.util.StringJoiner;
 @Entity
 @Inheritance (strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name = Tables.Names.LIBRARY_ITEM)
+
+@NamedQuery(name = Queries.LibraryItems.RESEARCH_BY_ISBN, query = "SELECT li FROM LibraryItem AS li WHERE li.ISBN = :isbn")
+@NamedQuery(name = Queries.LibraryItems.RESEARCH_BY_YEAR_OF_PUBLICATION, query = "SELECT li from LibraryItem AS li WHERE li.yearOfPublication = :yearOfPublication")
+@NamedQuery(name = Queries.LibraryItems.REMOVE_BY_ISBN, query = "DELETE li FROM LibraryItem  AS li WHERE li.ISBN = :isbn ")
+@NamedQuery(name = Queries.LibraryItems.RESEARCH_BY_TITLE, query = "SELECT li FROM LibraryItem AS li WHERE li.title LIKE CONCAT ('%', :title, '%')")
 
 public abstract class LibraryItem extends BaseEntity {
     @Column (length = 13, nullable = false)
@@ -78,10 +84,10 @@ public abstract class LibraryItem extends BaseEntity {
     @Override
     public String toString() {
         return new StringJoiner(", ", LibraryItem.class.getSimpleName() + "[", "]")
-                .add("ISBN=" + ISBN)
-                .add("title='" + title + "'")
-                .add("yearOfPublication=" + yearOfPublication)
-                .add("numberOfPages=" + numberOfPages)
+                .add("ISBN=" + getISBN())
+                .add("Title = '" + getTitle() + "'")
+                .add("Year of publication = " + getYearOfPublication())
+                .add("Number of pages = " + getNumberOfPages())
                 .toString();
     }
 
