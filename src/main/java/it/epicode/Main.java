@@ -27,8 +27,6 @@ public class Main {
         JpaBookLoanDao bookLoanDao = new JpaBookLoanDao(em);
         JpaUserDao userDao = new JpaUserDao(em);
         LocalDate currentDate = LocalDate.now();
-        LocalDate dateOfBirth = LocalDate.of(1995, 9,02);
-
 
         List<LibraryItem> libraryItems = new ArrayList<>();
 
@@ -120,6 +118,35 @@ public class Main {
         logger.debug("Aggiunta delle istanze di BookLoan al db:");
         // bookLoans.forEach(bookLoan -> bookLoanDao.addItem(bookLoan));
 
+        logger.debug("Applicazione dei metodi removeByISBN(long ISBN), researchByYearOfPublication(int yearOfPublication)," +
+                "researchByAuthor(String author), researchByTitle (String title)," +
+                "researchLentItemsByCardNumber(int cardNumber), researchByExpiredAndUnreturnedLoans(LibraryItem lentElement)");
 
+        // rimozione di "The Lord of the Rings - The Fellowship of the Ring"
+        // libraryItemDao.removeByISBN(9783161484100L);
+
+        // rimozione di National Geographic Traveler
+        // libraryItemDao.removeByISBN(9781408128761L);
+
+        // ricerca per anno di pubblicazione
+        // libraryItemDao.researchByYearOfPublication(2023);
+
+        // ricerca per autore
+        // libraryItemDao.researchByAuthor("Rowling");
+
+        // ricerca per titolo o parte di esso
+//        libraryItemDao.researchByTitle("%Lord of%");
+//        libraryItemDao.researchByTitle("%National%");
+
+        // ricerca di elementi prestati in base al numero di tessera dell'utente
+//        bookLoanDao.researchLentItemsByCardNumber(1005);
+//        bookLoanDao.researchLentItemsByCardNumber(1002);
+//        bookLoanDao.researchLentItemsByCardNumber(1001);
+
+        // ricerca dei prestiti scaduti e non ancora restituiti
+        // bookLoanDao.researchByExpiredAndUnreturnedLoans(currentDate);
+
+        em.close();
+        emf.close();
     }
 }
