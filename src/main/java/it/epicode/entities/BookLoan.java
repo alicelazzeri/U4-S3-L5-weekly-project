@@ -13,21 +13,9 @@ import java.util.StringJoiner;
 @Table(name = Tables.Names.BOOK_LOANS)
 
 @NamedQuery(name = Queries.BookLoans.RESEARCH_BY_EXPIRED_AND_UNRETURNED_LOANS, query = "SELECT bl FROM BookLoan AS bl WHERE bl.actualEndingOfLoan IS NULL AND :currentDate > bl.expectedEndingOfLoan")
-@NamedQuery(name = Queries.BookLoans.RESEARCH_LENT_ITEMS_BY_CARD_NUMBER, query = "SELECT bl.lentElement FROM BookLoan AS bl WHERE bl.user.cardNumber = :cardNumber AND bl.actualEndingOfLoan IS NULL")
+@NamedQuery(name = Queries.BookLoans.RESEARCH_LENT_ITEMS_BY_CARD_NUMBER, query = "SELECT bl.libraryItem FROM BookLoan AS bl WHERE bl.user.cardNumber = :cardNumber AND bl.actualEndingOfLoan IS NULL")
 
-public class BookLoan {
-    @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    private long id;
-
-    @ManyToOne
-    @JoinColumn (name="user_id")
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "library_item_id")
-    private LibraryItem lentElement;
-
+public class BookLoan extends BaseEntity {
     @Column
     private LocalDate beginningOfLoan;
     @Column
@@ -35,40 +23,23 @@ public class BookLoan {
     @Column
     private LocalDate actualEndingOfLoan;
 
-    public BookLoan(long id, User user, LibraryItem lentElement, LocalDate beginningOfLoan, int daysToAdd, Date expectedEndingOfLoan, LocalDate actualEndingOfLoan) {
-        this.id = id;
+    @ManyToOne
+    @JoinColumn (name="user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "library_item_id")
+    private LibraryItem libraryItem;
+
+    public BookLoan(User user, LibraryItem libraryItem, LocalDate beginningOfLoan, LocalDate expectedEndingOfLoan, LocalDate actualEndingOfLoan) {
         this.user = user;
-        this.lentElement = lentElement;
+        this.libraryItem = libraryItem;
         this.beginningOfLoan = beginningOfLoan;
         this.expectedEndingOfLoan = beginningOfLoan.plusDays(30);
         this.actualEndingOfLoan = actualEndingOfLoan;
     }
 
     public BookLoan() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public LibraryItem getLentElement() {
-        return lentElement;
-    }
-
-    public void setLentElement(LibraryItem lentElement) {
-        this.lentElement = lentElement;
     }
 
     public LocalDate getBeginningOfLoan() {
@@ -95,12 +66,29 @@ public class BookLoan {
         this.actualEndingOfLoan = actualEndingOfLoan;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public LibraryItem getLibraryItem() {
+        return libraryItem;
+    }
+
+    public void setLibraryItem(LibraryItem libraryItem) {
+        this.libraryItem = libraryItem;
+    }
+
+
     @Override
     public String toString() {
         return new StringJoiner(", ", BookLoan.class.getSimpleName() + "[", "]")
                 .add("ID = " + getId())
                 .add("User = " + getUser())
-                .add("Lent element = " + getLentElement())
+                .add("Lent element = " + getLibraryItem())
                 .add("Beginning of the loan = " + getBeginningOfLoan())
                 .add("Expected ending of the loan = " + getExpectedEndingOfLoan())
                 .add("Actual ending of the loan = " + getActualEndingOfLoan())
@@ -111,11 +99,11 @@ public class BookLoan {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BookLoan bookLoan)) return false;
-        return getId() == bookLoan.getId() && Objects.equals(getUser(), bookLoan.getUser()) && Objects.equals(getLentElement(), bookLoan.getLentElement()) && Objects.equals(getBeginningOfLoan(), bookLoan.getBeginningOfLoan()) && Objects.equals(getExpectedEndingOfLoan(), bookLoan.getExpectedEndingOfLoan()) && Objects.equals(getActualEndingOfLoan(), bookLoan.getActualEndingOfLoan());
+        return getId() == bookLoan.getId() && Objects.equals(getUser(), bookLoan.getUser()) && Objects.equals(getLibraryItem(), bookLoan.getLibraryItem()) && Objects.equals(getBeginningOfLoan(), bookLoan.getBeginningOfLoan()) && Objects.equals(getExpectedEndingOfLoan(), bookLoan.getExpectedEndingOfLoan()) && Objects.equals(getActualEndingOfLoan(), bookLoan.getActualEndingOfLoan());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getUser(), getLentElement(), getBeginningOfLoan(), getExpectedEndingOfLoan(), getActualEndingOfLoan());
+        return Objects.hash(getId(), getUser(), getLibraryItem(), getBeginningOfLoan(), getExpectedEndingOfLoan(), getActualEndingOfLoan());
     }
 }

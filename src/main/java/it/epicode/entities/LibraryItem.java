@@ -10,18 +10,19 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 @Entity
-@Inheritance (strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name = Tables.Names.LIBRARY_ITEM)
+@Inheritance (strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "data_type", discriminatorType = DiscriminatorType.STRING)
 
 @NamedQuery(name = Queries.LibraryItems.RESEARCH_BY_ISBN, query = "SELECT li FROM LibraryItem AS li WHERE li.ISBN = :isbn")
 @NamedQuery(name = Queries.LibraryItems.RESEARCH_BY_YEAR_OF_PUBLICATION, query = "SELECT li from LibraryItem AS li WHERE li.yearOfPublication = :yearOfPublication")
-@NamedQuery(name = Queries.LibraryItems.REMOVE_BY_ISBN, query = "DELETE li FROM LibraryItem  AS li WHERE li.ISBN = :isbn ")
+@NamedQuery(name = Queries.LibraryItems.REMOVE_BY_ISBN, query = "DELETE FROM LibraryItem AS li WHERE li.ISBN = :isbn ")
 @NamedQuery(name = Queries.LibraryItems.RESEARCH_BY_TITLE, query = "SELECT li FROM LibraryItem AS li WHERE li.title LIKE CONCAT ('%', :title, '%')")
 
 public abstract class LibraryItem extends BaseEntity {
-    @Column (length = 13, nullable = false)
+    @Column
     private long ISBN;
-    @Column(length = 50, nullable = false)
+    @Column
     private String title;
     @Column
     private int yearOfPublication;

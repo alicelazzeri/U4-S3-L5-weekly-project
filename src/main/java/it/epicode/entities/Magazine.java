@@ -2,6 +2,7 @@ package it.epicode.entities;
 
 import it.epicode.entities.constants.Tables;
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -10,9 +11,10 @@ import java.util.StringJoiner;
 
 @Entity
 @Table (name = Tables.Names.MAGAZINES)
+@DiscriminatorValue("Magazines")
 
 public class Magazine extends LibraryItem {
-    @Column (length = 20, nullable = false)
+    @Column
     private Periodicity periodicity;
 
     public Magazine(long ISBN, String title, int yearOfPublication, int numberOfPages, Periodicity periodicity) {

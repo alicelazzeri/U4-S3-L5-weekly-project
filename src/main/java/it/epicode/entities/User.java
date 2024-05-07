@@ -5,32 +5,26 @@ import it.epicode.entities.constants.Tables;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 
 @Entity
 @Table (name= Tables.Names.USERS)
 
-public class User {
-    @Id
-    @GeneratedValue (strategy =GenerationType.AUTO)
-    private long id;
-    @Column (length = 30, nullable = false)
+public class User extends BaseEntity {
+
+    @Column
     private String name;
-    @Column (length = 30, nullable = false)
+    @Column
     private String surname;
     @Column
     private LocalDate dateOfBirth;
-    @Column (length = 10, nullable = false)
+    @Column
     private int cardNumber;
 
     @OneToMany (mappedBy ="user")
     private List<BookLoan> bookLoans = new ArrayList<>();
 
-    public User(long id, String name, String surname, LocalDate dateOfBirth, int cardNumber, List<BookLoan> bookLoans) {
-        this.id = id;
+    public User(String name, String surname, LocalDate dateOfBirth, int cardNumber, List<BookLoan> bookLoans) {
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
@@ -39,14 +33,6 @@ public class User {
     }
 
     public User() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {

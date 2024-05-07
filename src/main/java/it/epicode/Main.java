@@ -1,23 +1,36 @@
 package it.epicode;
 
-import it.epicode.dao.implementations.JpaBookDao;
-import it.epicode.dao.implementations.JpaMagazineDao;
+import it.epicode.dao.JpaBookLoanDao;
+import it.epicode.dao.JpaLibraryItemDao;
+import it.epicode.dao.JpaUserDao;
 import it.epicode.entities.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Main {
 
+    private static final String PERSISTENCE_UNIT = "gestione_catalogo_bibliotecario";
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
+    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
 
     public static void main(String[] args) {
+        EntityManager em = emf.createEntityManager();
+        JpaLibraryItemDao libraryItemDao = new JpaLibraryItemDao(em);
+        JpaBookLoanDao bookLoanDao = new JpaBookLoanDao(em);
+        JpaUserDao userDao = new JpaUserDao(em);
+        LocalDate currentDate = LocalDate.now();
+        LocalDate dateOfBirth = LocalDate.of(1995, 9,02);
+
 
         List<LibraryItem> libraryItems = new ArrayList<>();
-        List<User> users = new ArrayList<>();
-        List<BookLoan> bookLoans = new ArrayList<>();
 
         Book book1 = new Book(9783161484100L, "The Lord of the Rings - The Fellowship of the Ring", 1954, 956, "J.R.R. Tolkien", "Fantasy");
         Book book2 = new Book(9781408855652L, "Harry Potter and the Philosopher's Stone", 1997, 223, "J.K. Rowling", "Fantasy");
@@ -31,7 +44,6 @@ public class Main {
         Book book10 = new Book(9780395489307L, "The Lord of the Rings - The Return of the King", 1955, 416, "J.R.R. Tolkien", "Fantasy");
         Book book11 = new Book(9781582872919L, "Tess of the d'Urbervilles", 1891, 544, "Thomas Hardy", "Novel");
         Book book12 = new Book(9781569786729L, "The Castle of Otranto", 1764, 192, "Horace Walpole", "Gothic Novel");
-
         Magazine magazine1 = new Magazine(9781419704406L, "Vogue", 2024, 100, Periodicity.MONTHLY);
         Magazine magazine2 = new Magazine(9783161484100L, "National Geographic", 2023, 80, Periodicity.MONTHLY);
         Magazine magazine3 = new Magazine(9780321965516L, "Time", 2022, 64, Periodicity.WEEKLY);
@@ -57,7 +69,6 @@ public class Main {
         libraryItems.add(book10);
         libraryItems.add(book11);
         libraryItems.add(book12);
-
         libraryItems.add(magazine1);
         libraryItems.add(magazine2);
         libraryItems.add(magazine3);
@@ -74,29 +85,40 @@ public class Main {
         logger.debug("Aggiunta degli items Book e Magazine a libraryItems:");
         libraryItems.forEach(libraryItem -> System.out.println(libraryItem));
 
-        logger.debug("Aggiunta degli items al db:");
+        logger.debug("Aggiunta degli items Book e Magazine al db:");
+        // libraryItems.forEach(libraryItem -> libraryItemDao.addItem(libraryItem));
 
-        try (JpaBookDao bookDao = new JpaBookDao();
-             JpaMagazineDao magazineDao = new JpaMagazineDao()) {
+        List<User> users = new ArrayList<>();
+        users.add(new User("John", "Doe", LocalDate.of(1990, 5, 15), 1001, new ArrayList<>()));
+        users.add(new User("Jane", "Smith", LocalDate.of(1985, 8, 25), 1002, new ArrayList<>()));
+        users.add(new User("Michael", "Johnson", LocalDate.of(1982, 3, 10), 1003, new ArrayList<>()));
+        users.add(new User("Emily", "Brown", LocalDate.of(1995, 11, 7), 1004, new ArrayList<>()));
+        users.add(new User("David", "Wilson", LocalDate.of(1978, 9, 30), 1005, new ArrayList<>()));
 
-            libraryItems.forEach(item -> {
-                if (item instanceof Book) {
-                    bookDao.addItem((Book) item);
-                } else if (item instanceof Magazine) {
-                    magazineDao.addItem((Magazine) item);
-                } else {
-                    logger.warn("Tipo non gestito: {}", item.getClass().getName());
-                }
-            });
+        logger.debug("Aggiunta delle istanze di User a users:");
+        users.forEach(user -> System.out.println(user));
 
-        } catch (Exception e) {
-            logger.error("Errore durante l'esecuzione delle operazioni", e);
+        logger.debug("Aggiunta delle istanze di User al db:");
+        // users.forEach(user -> userDao.addItem(user));
+
+        List<BookLoan> bookLoans = new ArrayList<>();
+        Random random = new Random();
+        for(User user : users) {
+            LibraryItem rndmLibraryItem = libraryItems.get(random.nextInt(libraryItems.size()));
+            LocalDate startDate = LocalDate.now().minusDays(random.nextInt(30));
+            LocalDate endDate = startDate.plusDays(random.nextInt(14) + 1);
+            LocalDate actualEndDate = random.nextBoolean() ? endDate : endDate.plusDays(random.nextInt(7));
+            BookLoan loan = new BookLoan(user, rndmLibraryItem, startDate, endDate, actualEndDate);
+            bookLoans.add(loan);
         }
 
+        logger.debug("Aggiunta delle istanze di BookLoan a bookLoans:");
+        for (BookLoan loan : bookLoans) {
+            System.out.println(loan);
+        }
 
-
-
-
+        logger.debug("Aggiunta delle istanze di BookLoan al db:");
+        // bookLoans.forEach(bookLoan -> bookLoanDao.addItem(bookLoan));
 
 
     }

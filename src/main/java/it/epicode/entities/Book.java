@@ -2,23 +2,21 @@ package it.epicode.entities;
 
 import it.epicode.entities.constants.Queries;
 import it.epicode.entities.constants.Tables;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.NamedQuery;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 import java.util.StringJoiner;
 
 @Entity
 @Table (name = Tables.Names.BOOKS)
+@DiscriminatorValue("Books")
 
 @NamedQuery(name = Queries.Books.RESEARCH_BY_AUTHOR, query = "SELECT b FROM Book AS b WHERE b.author LIKE :author")
 
 public class Book extends LibraryItem {
-    @Column (length = 30, nullable = false)
+    @Column
     private String author;
-    @Column (length = 30)
+    @Column
     private String genre;
 
     public Book(long ISBN, String title, int yearOfPublication, int numberOfPages, String author, String genre) {
