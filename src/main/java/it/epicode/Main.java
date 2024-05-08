@@ -123,28 +123,38 @@ public class Main {
                 "researchLentItemsByCardNumber(int cardNumber), researchByExpiredAndUnreturnedLoans(LibraryItem lentElement)");
 
         // rimozione di "The Lord of the Rings - The Fellowship of the Ring"
-        // libraryItemDao.removeByISBN(9783161484100L);
+        LibraryItem removedBook= libraryItemDao.removeByISBN(9783161484100L);
+        logger.debug("This is the removed book: {}", removedBook);
 
         // rimozione di National Geographic Traveler
-        // libraryItemDao.removeByISBN(9781408128761L);
+        LibraryItem removedMagazine = libraryItemDao.removeByISBN(9781408128761L);
+        logger.debug("This is the removed magazine: {}", removedMagazine);
 
         // ricerca per anno di pubblicazione
-        // libraryItemDao.researchByYearOfPublication(2023);
+        LibraryItem researchedItemByYear = (LibraryItem) libraryItemDao.researchByYearOfPublication(2023);
+        logger.debug("This is the researched item: {}", researchedItemByYear);
 
         // ricerca per autore
-        // libraryItemDao.researchByAuthor("Rowling");
+        Book researchedItemByAuthor = (Book) libraryItemDao.researchByAuthor("Rowling");
+        logger.debug("This is the researched item by author: {}", researchedItemByAuthor);
 
         // ricerca per titolo o parte di esso
-//        libraryItemDao.researchByTitle("%Lord of%");
-//        libraryItemDao.researchByTitle("%National%");
+        LibraryItem researchedItemByTitle = (LibraryItem) libraryItemDao.researchByTitle("%Lord of%");
+        LibraryItem researchedItemByTitle2 = (LibraryItem)  libraryItemDao.researchByTitle("%National%");
+        logger.debug("These are the researched items by title: {}", researchedItemByTitle, researchedItemByTitle2);
 
         // ricerca di elementi prestati in base al numero di tessera dell'utente
-//        bookLoanDao.researchLentItemsByCardNumber(1005);
-//        bookLoanDao.researchLentItemsByCardNumber(1002);
-//        bookLoanDao.researchLentItemsByCardNumber(1001);
+        List <BookLoan> lentItemsByCardNumber = bookLoanDao.researchLentItemsByCardNumber(1005);
+        for (BookLoan lentItemByCardNumber : lentItemsByCardNumber) {
+            logger.debug("These are the lent items by card number: {}", lentItemByCardNumber);
+        }
+
 
         // ricerca dei prestiti scaduti e non ancora restituiti
-        // bookLoanDao.researchByExpiredAndUnreturnedLoans(currentDate);
+        List<BookLoan> expiredAndUnreturnedLoans = bookLoanDao.researchByExpiredAndUnreturnedLoans(currentDate);
+        for (BookLoan expiredAndUnreturnedLoan : expiredAndUnreturnedLoans) {
+            logger.debug("These are the expired and unreturned loans: {}", expiredAndUnreturnedLoan);
+        }
 
         em.close();
         emf.close();
